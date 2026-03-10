@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'uzhavankart',
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://uzhavankart-production.up.railway.app"
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
