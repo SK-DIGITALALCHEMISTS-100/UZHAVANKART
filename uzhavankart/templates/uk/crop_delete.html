@@ -1,0 +1,14 @@
+{% extends "uk/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Delete Crop Product</h2>
+    <p>Are you sure you want to delete <strong>{{ product.crop_name }}</strong> ({{ product.total_kg }} Kg)?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'crop_search' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,52 @@
+{% extends 'uk/base.html' %}
+
+{% block title %}Add Stock | Uzhavan Kart{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom">
+            <h2 class="mb-4 text-center text-success">Add Stock Entry</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success text-center">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.crop_name.label_tag }}  
+                    {{ form.crop_name }}
+                </div>
+                <div class="mb-3">
+                    {{ form.stock_type.label_tag }}  
+                    {{ form.stock_type }}
+                </div>
+                <div class="mb-3">
+                    {{ form.quantity_kg.label_tag }}  
+                    {{ form.quantity_kg }}
+                </div>
+                <div class="mb-3">
+                    {{ form.price_per_kg.label_tag }}  
+                    {{ form.price_per_kg }}
+                </div>
+                <div class="mb-3">
+                    {{ form.stock_image.label_tag }}  
+                    {{ form.stock_image }}
+                </div>
+
+                <div class="d-grid mt-3">
+                    <button type="submit" class="btn btn-success btn-lg">Save Stock</button>
+                </div><BR>
+                 <div class="d-grid">
+  <a href="{% url 'hub-dashboard' %}" class="btn btn-outline-success">
+    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+  </a>
+</div><BR>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

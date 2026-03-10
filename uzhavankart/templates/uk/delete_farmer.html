@@ -1,0 +1,107 @@
+{% extends "uk/base.html" %}
+
+{% block title %}Delete Farmer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container-delete {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h2 {
+        color: #c0392b;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+    .btn-danger:hover { background: #c0392b; }
+
+    .btn-secondary {
+        background: #7f8c8d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover { background: #5e6e70; }
+
+    .photo-preview img {
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .alert {
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .alert-error { background: #ffe6e6; color: #c0392b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-delete">
+    <h2>DELETE FARMER </h2>
+
+    {% if error %}
+        <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% if not farmer %}
+        <form method="POST">
+            {% csrf_token %}
+            <label for="farmer_id">Enter Farmer ID:</label>
+            <input type="text" name="farmer_id" id="farmer_id" required>
+            <button type="submit" class="btn btn-danger" name="fetch">Fetch Farmer</button>
+            <a href="{% url 'farmer-dashboard-man' %}" class="back-btn">← Back</a> 
+        </form>
+    {% endif %}
+
+    {% if farmer %}
+        <p>Are you sure you want to delete <strong>{{ farmer.name }}</strong> (ID: {{ farmer.farmer_id }})?</p>
+
+        {% if farmer.photo %}
+            <div class="photo-preview">
+                <img src="{{ farmer.photo.url }}" width="100">
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="confirm_delete" value="1">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'farmer_delete' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

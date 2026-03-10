@@ -1,0 +1,32 @@
+{% extends "uk/customer_base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="alert alert-success">
+    🎉 Your order was placed successfully!
+  </div>
+
+  <h3>🧾 Recent Orders</h3>
+  <table class="table table-bordered text-center mt-3">
+    <thead>
+      <tr>
+        <th>Crop</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Payment</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.crop_name }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>₹ {{ order.total_price }}</td>
+        <td>{{ order.payment_method }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'browse_products_customer' %}" class="btn btn-primary mt-3">⬅️ Continue Shopping</a>
+</div>
+{% endblock %}

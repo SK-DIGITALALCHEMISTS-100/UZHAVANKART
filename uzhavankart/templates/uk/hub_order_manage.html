@@ -1,0 +1,60 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+
+<div class="container mt-4">
+  <h2>📦 Hub Order Management</h2>
+<div class="back-btn">
+        <a href="{% url 'hub-dashboard' %}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
+    </div>
+  <table class="table table-bordered text-center mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Crop</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.customer_email }}</td>
+        <td>{{ order.crop_name }}</td>
+        <td>{{ order.quantity }}</td>
+        <td>₹ {{ order.total_price }}</td>
+        <td>{{ order.payment_method }}</td>
+        <td>
+          {% if order.status == "Cancelled" %}
+            <span class="badge bg-danger">Cancelled</span>
+          {% elif order.status == "Completed" %}
+            <span class="badge bg-success">Completed</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if order.status == "Pending" %}
+            <a href="{% url 'hub_update_order_status' order.id 'Completed' %}" 
+               class="btn btn-success btn-sm">✅ Complete</a>
+            <a href="{% url 'hub_update_order_status' order.id 'Cancelled' %}" 
+               class="btn btn-danger btn-sm">❌ Cancel</a>
+          {% elif order.status == "Completed" %}
+            <span class="text-success fw-bold">✔ Order Completed</span>
+          {% elif order.status == "Cancelled" %}
+            <span class="text-danger fw-bold">✖ Order Cancelled</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

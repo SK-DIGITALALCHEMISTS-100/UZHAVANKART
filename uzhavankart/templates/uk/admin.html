@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uzhavan Kart Dashboard</title>
+
+  <!-- Bootstrap & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      background: #0d1b2a;
+      padding-top: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 350px;
+      color: white;
+      overflow-y: auto;
+    }
+    .sidebar .navbar-brand {
+      padding: 0 15px;
+      margin-bottom: 20px;
+    }
+    .sidebar img {
+      max-height: 60px;
+    }
+    .sidebar span {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fcbf49;
+    }
+    .sidebar a {
+      color: #dee2e6;
+      text-decoration: none;
+      display: block;
+      padding: 12px 20px;
+      font-weight: 500;
+      border-radius: 6px;
+      margin: 5px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #1c4b5f;
+      color: #ffe066;
+      padding-left: 25px;
+    }
+
+    /* Navbar */
+    .navbar-custom {
+      margin-left: 350px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      padding: 18px 24px; /* increased height */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-custom .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 350px;
+      padding: 30px;
+    }
+
+    /* Banner */
+    .admin-banner {
+      background: linear-gradient(90deg, #3c6382 0%, #60a3bc 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Cards */
+    .card-custom {
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      background-color: #ffffff;
+      padding: 20px;
+      text-align: center;
+      border-left: 5px solid #00b894;
+      transition: transform 0.3s ease;
+    }
+    .card-custom:hover {
+      transform: translateY(-6px);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .navbar-custom, .main-content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a class="navbar-brand d-flex align-items-center fs-4" href="#">
+      <img src="{% static 'uk/uklogo.png' %}" alt="Uzhavan Kart Logo" class="me-2">
+      <span>UZHAVAN KART</span>
+    </a>
+
+
+  <a href="#" class="active text-primary">
+    <i class="bi bi-speedometer2 me-2 text-info"></i>Admin Dashboard
+  </a>
+
+  <a href="{% url 'farmer-dashboard-man' %}">
+    <i class="bi bi-people-fill me-2 text-success"></i> Farmers
+  </a>
+
+ 
+
+  <a href="{% url 'employee-dashboard' %}">
+    <i class="bi bi-person-badge-fill me-2 text-primary"></i> Employees
+  </a>
+
+  <a href="{% url 'market-dashboard' %}">
+    <i class="bi bi-cash-stack me-2 text-success"></i> Market Price
+  </a>
+
+  <a href="{% url 'admin-hub' %}">
+    <i class="bi bi-building-check me-2 text-danger"></i> Hubs
+  </a>
+
+  <a href="{% url 'admin_vehicle_list' %}">
+    <i class="bi bi-truck-front me-2 text-warning"></i> Transports
+  </a>
+
+  <a href="{% url 'admin_messages' %}">
+    <i class="bi bi-envelope-paper-fill me-2 text-purple"></i> Contact Messages
+  </a>
+</div>
+
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand navbar-light navbar-custom">
+    <div class="container-fluid">
+      <span class="navbar-brand">Admin Dashboard</span>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+            {% if employee.photo %}
+              <img src="{{ employee.photo.url }}" class="rounded-circle me-2" width="40" height="40" alt="Profile">
+            {% else %}
+              <i class="bi bi-person-circle fs-4 me-2"></i>
+            {% endif %}
+            {{ employee.name }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <h6 class="px-3 py-2">ID: {{ employee.emp_id }}</h6>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'employee-login' %}">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Banner -->
+    <div class="admin-banner">
+      <h2>Welcome, {{ employee.name }} ({{ employee.emp_id }})</h2>
+      <p>Manage all Uzhavan Kart operations at a glance.</p>
+    </div>
+
+    <!-- Admin Dashboard Cards -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card-custom">
+          <h5>Total Users</h5>
+          <h2>{{ total_employee }}</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-custom">
+          <h5>Total Farmers</h5>
+          <h2>{{ total_farmers }}</h2>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-custom">
+          <h5>Total Orders</h5>
+          <h2>{{ total_orders }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-6">
+        <div class="card card-custom p-4">
+          <h5>Sales Overview</h5>
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-custom p-4">
+          <h5>Stock Distribution</h5>
+          <canvas id="trafficChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  {{ stock_labels|json_script:"stock-labels" }}
+  {{ stock_values|json_script:"stock-values" }}
+
+  <script>
+    const stockLabels = JSON.parse(document.getElementById('stock-labels').textContent);
+    const stockValues = JSON.parse(document.getElementById('stock-values').textContent);
+
+    const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(trafficCtx, {
+      type: 'doughnut',
+      data: {
+        labels: stockLabels,
+        datasets: [{
+          data: stockValues,
+          backgroundColor: ['#6a89cc', '#38ada9', '#e58e26', '#b71540']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends 'uk/base.html' %}
+
+{% block title %}Delete Stock | Uzhavan Kart{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card-custom text-center">
+            <h3 class="text-danger mb-4">Are you sure you want to delete this stock?</h3>
+            <p><strong>{{ stock.crop_name }}</strong> ({{ stock.get_stock_type_display }})</p>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <a href="{% url 'stock_list' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

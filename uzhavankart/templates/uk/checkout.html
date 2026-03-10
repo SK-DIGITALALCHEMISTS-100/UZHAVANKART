@@ -1,0 +1,26 @@
+{% extends "uk/customer_base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Checkout</h2>
+  <h5>Order Summary</h5>
+  <ul>
+    {% for item in cart_items %}
+      <li>{{ item.product.crop_name }} - {{ item.quantity }} × ₹{{ item.product.price_per_kg }} = ₹{{ item.subtotal }}</li>
+    {% endfor %}
+  </ul>
+  <h4>Total: ₹{{ total }}</h4>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3"><input type="text" name="name" placeholder="Full Name" class="form-control"></div>
+    <div class="mb-3"><input type="text" name="mobile" placeholder="Mobile No" class="form-control"></div>
+    <div class="mb-3"><textarea name="address" placeholder="Address" class="form-control"></textarea></div>
+    <div class="mb-3">
+      <select name="payment_method" class="form-control">
+        <option value="COD">Cash on Delivery</option>
+        <option value="Online">Online Payment</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success">Place Order</button>
+  </form>
+</div>
+{% endblock %}

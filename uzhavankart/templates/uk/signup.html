@@ -1,0 +1,78 @@
+{% extends "uk/customer_base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #f1f8e9, #e0f2f1);
+    font-family: "Segoe UI", sans-serif;
+  }
+  .card {
+    border-radius: 20px;
+    background: #fff;
+    border: none;
+  }
+  .card h3 {
+    font-weight: 700;
+    color: #2e7d32;
+  }
+  form input, form select {
+    border-radius: 10px !important;
+    padding: 10px;
+    border: 1px solid #ced4da;
+  }
+  form input:focus {
+    border-color: #43a047;
+    box-shadow: 0 0 6px rgba(67, 160, 71, 0.4);
+  }
+  .btn-success {
+    border-radius: 30px;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+  }
+  .btn-success:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+  }
+  .signup-footer {
+    margin-top: 15px;
+    font-size: 0.95rem;
+  }
+  .signup-footer a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #2e7d32;
+  }
+  .signup-footer a:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-lg p-4">
+      <h3 class="text-center mb-4">🌾 Customer Signup</h3>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger text-center">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-grid mt-3">
+          <button type="submit" class="btn btn-success btn-lg">Sign Up</button>
+        </div>
+      </form>
+
+      <p class="signup-footer text-center">
+        Already have an account? <a href="{% url 'customer_login' %}">Login</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

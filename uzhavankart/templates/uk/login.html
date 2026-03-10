@@ -1,0 +1,56 @@
+{% extends "uk/customer_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+      
+      <!-- Heading -->
+      <h3 class="text-center text-success fw-bold mb-4">🔑 Customer Login</h3>
+
+      <!-- Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} text-center">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Form -->
+     <form method="post" class="needs-validation" novalidate>
+  {% csrf_token %}
+  
+  <div class="mb-3">
+    <label for="id_email" class="form-label">Email</label>
+    <input type="email" name="email" class="form-control shadow-sm" id="id_email" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="id_password" class="form-label">Password</label>
+    <input type="password" name="password" class="form-control shadow-sm" id="id_password" required>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">Login</button>
+  </div>
+</form>
+
+
+      <!-- Links -->
+      <p class="mt-4 text-center">
+        <a href="{% url 'forgot_password' %}" class="text-decoration-none text-success fw-semibold">
+          Forgot Password?
+        </a>
+      </p>
+      <p class="text-center">
+        Don’t have an account? 
+        <a href="{% url 'customer_signup' %}" class="fw-bold text-success text-decoration-none">
+          Sign up
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

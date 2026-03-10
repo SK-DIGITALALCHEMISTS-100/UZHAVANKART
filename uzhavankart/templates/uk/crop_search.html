@@ -1,0 +1,48 @@
+{% extends "uk/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Search Crop Products by Farmer ID</h2>
+     <div class="mb-4">
+    <a href="{% url 'agent-dashboard' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+    <form method="POST" class="mb-4 card p-3 shadow-sm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    {% if products %}
+        <h4>Results</h4>
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Crop</th>
+                    <th>Total (Kg)</th>
+                    <th>Price/Kg</th>
+                    <th>Total Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name_of_crop }}</td>
+                    <td>{{ product.total_kg }}</td>
+                    <td>₹ {{ product.price_per_kg }}</td>
+                    <td>₹ {{ product.total_value }}</td>
+                    <td>
+                        <a href="{% url 'crop_update' product.id %}" class="btn btn-sm btn-warning">Update</a>
+                        <a href="{% url 'crop_delete' product.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif products is not None %}
+        <div class="alert alert-warning">No products found for this Farmer ID.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "uk/customer_base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3>❌ Cancel Your Orders</h3>
+
+  {% if orders %}
+    <table class="table table-bordered text-center mt-3">
+      <thead class="table-danger">
+        <tr>
+          <th>Crop</th>
+          <th>Quantity</th>
+          <th>Total Price</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.crop_name }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>₹ {{ order.total_price }}</td>
+          <td>{{ order.payment_method }}</td>
+          <td>
+            {% if order.status == "Cancelled" %}
+              <span class="badge bg-danger">Cancelled</span>
+            {% else %}
+              <span class="badge bg-success">Active</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if order.status != "Cancelled" %}
+              <a href="{% url 'cancel_order' order.id %}" 
+                 class="btn btn-sm btn-danger"
+                 onclick="return confirm('Are you sure you want to cancel this order?');">
+                 ❌ Cancel
+              </a>
+            {% else %}
+              <span class="text-muted">Already Cancelled</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="alert alert-warning mt-3">⚠️ You don’t have any orders yet.</p>
+  {% endif %}
+
+  <a href="{% url 'browse_products_customer' %}" class="btn btn-primary mt-3">⬅️ Continue Shopping</a>
+</div>
+{% endblock %}

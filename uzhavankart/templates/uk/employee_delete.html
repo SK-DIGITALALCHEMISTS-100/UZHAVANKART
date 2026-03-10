@@ -1,0 +1,132 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(to right, #fdfbfb, #ebedee);
+    font-family: 'Poppins', sans-serif;
+  }
+  .delete-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #d00000;
+    margin-bottom: 25px;
+  }
+  .btn-delete {
+    background: #d00000;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 22px;
+    border: none;
+  }
+  .btn-delete:hover { background: #a30000; }
+  .btn-back {
+    background: #6c757d;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 10px 22px;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  .btn-back:hover { background: #495057; }
+  .alert-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #badbcc;
+    margin-bottom: 15px;
+  }
+  .alert-error {
+    background: #f8d7da;
+    color: #842029;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f5c2c7;
+    margin-bottom: 15px;
+  }
+  .emp-details {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+  }
+  .emp-details p {
+    margin: 8px 0;
+  }
+  .emp-photo {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .emp-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+  }
+</style>
+
+<div class="container">
+  <div class="delete-container">
+    <div class="title">Delete Employee</div>
+
+    {% if success %}
+      <div class="alert-success">{{ success }}</div>
+    {% endif %}
+    {% if error %}
+      <div class="alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% if not employee %}
+    <!-- Step 1: Enter Employee ID -->
+    <form method="post">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" name="emp_id" class="form-control" placeholder="Enter Employee ID" required>
+        <button type="submit" class="btn btn-delete">Fetch Employee</button>
+      </div>
+      <a href="{% url 'employee-dashboard' %}" class="btn-back">⬅ Back</a>
+    </form>
+    {% endif %}
+
+    {% if employee %}
+    <!-- Step 2: Show Employee Details & Confirm Delete -->
+    <div class="emp-details">
+      <div class="emp-photo">
+        {% if employee.photo %}
+          <img src="{{ employee.photo.url }}" alt="Employee Photo">
+        {% else %}
+          
+        {% endif %}
+      </div>
+      <p><strong>Emp ID:</strong> {{ employee.emp_id }}</p>
+      <p><strong>Name:</strong> {{ employee.name }}</p>
+      <p><strong>Job Role:</strong> {{ employee.job_role }}</p>
+      <p><strong>Mobile:</strong> {{ employee.mobile_no }}</p>
+      <p><strong>Address:</strong> {{ employee.address }}</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="emp_id_hidden" value="{{ employee.emp_id }}">
+      <a href="{% url 'employee-dashboard' %}" class="btn-back">⬅ Cancel</a>
+      <button type="submit" name="confirm_delete" class="btn btn-delete">Yes, Delete</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(to right, #fdfbfb, #ebedee);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .search-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  }
+
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2d6a4f;
+    margin-bottom: 30px;
+  }
+
+  .btn-custom {
+    background: linear-gradient(to right, #40916c, #2d6a4f);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 12px;
+    border: none;
+  }
+
+  .btn-custom:hover {
+    background: #1b4332;
+  }
+
+  .result-card {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f9fa;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+
+  .emp-photo {
+    max-width: 150px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .emp-details p {
+    margin: 6px 0;
+    font-size: 1.05rem;
+  }
+
+  .alert-error {
+    background: #f8d7da;
+    color: #842029;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f5c2c7;
+    text-align: center;
+    font-weight: 500;
+  }
+</style>
+<div class="container mt-4">
+  <div class="d-flex justify-content-start mb-3">
+    <a href="{% url 'employee-dashboard' %}" class="btn btn-outline-success">
+      <i class="fas fa-arrow-left me-1"></i> Back to Registration
+    </a>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="search-container">
+    <div class="title">Search Employee by ID</div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" name="emp_id" class="form-control" placeholder="Enter Employee ID" required>
+        <button type="submit" class="btn btn-custom">Search</button>
+      </div>
+    </form>
+
+    {% if error %}
+      <div class="alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% if employee %}
+    <div class="result-card d-flex align-items-center">
+      <div>
+        <img src="{{ employee.photo.url }}" alt="Employee Photo" class="emp-photo me-3">
+      </div>
+      <div class="emp-details">
+        <p><b>Employee ID:</b> {{ employee.emp_id }}</p>
+        <p><b>Name:</b> {{ employee.name }}</p>
+        <p><b>Date of Birth:</b> {{ employee.dob }}</p>
+        <p><b>Gender:</b> {{ employee.get_gender_display }}</p>
+        <p><b>Mobile:</b> {{ employee.mobile_no }}</p>
+        <p><b>Address:</b> {{ employee.address }}</p>
+        <p><b>Job Role:</b> {{ employee.job_role }}</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "uk/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Staff Attendance</h2>
+
+    <!-- Search by Staff ID -->
+    <div class="card shadow p-4 mb-4">
+        <h4>Enter Staff ID</h4>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" name="staff_id" class="form-control" placeholder="Enter Staff ID" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <select name="status" class="form-control" required>
+                        <option value="">-- Select Status --</option>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <button type="submit" class="btn btn-success">Mark Attendance</button>
+                </div>
+                 <div class="mt-3">
+        <a href="{% url 'hub-dashboard' %}" class="btn btn-secondary">
+            ← Back
+        </a>
+    </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- If Staff Found -->
+    {% if staff %}
+    <div class="card shadow p-4">
+        <h4>Staff Details</h4>
+        <p><strong>ID:</strong> {{ staff.staff_id }}</p>
+        <p><strong>Name:</strong> {{ staff.name }}</p>
+        <p><strong>Phone:</strong> {{ staff.phone }}</p>
+        <p><strong>Address:</strong> {{ staff.address }}</p>
+        <p><strong>Joined:</strong> {{ staff.joined_date }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Success Message -->
+    {% if attendance_marked %}
+        <div class="alert alert-success mt-3">
+            Attendance has been marked successfully!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

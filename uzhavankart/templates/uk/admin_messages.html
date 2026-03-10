@@ -1,0 +1,60 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block title %}Contact Messages - Admin{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Contact Messages</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Mobile No</th>
+                <th>Message</th>
+                <th>Received At</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for msg in messages_list %}
+            <tr>
+                <td>{{ msg.id }}</td>
+                <td>{{ msg.name }}</td>
+                <td>{{ msg.mobileno }}</td>
+                <td>{{ msg.message }}</td>
+                <td>{{ msg.created_at|date:"d-m-Y H:i" }}</td>
+                <td>
+                    {% if msg.is_resolved %}
+                        <span class="badge bg-success">Resolved</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not msg.is_resolved %}
+                        <a href="{% url 'mark_resolved' msg.id %}" class="btn btn-sm btn-primary">Query Over</a>
+                    {% else %}
+                        ---
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

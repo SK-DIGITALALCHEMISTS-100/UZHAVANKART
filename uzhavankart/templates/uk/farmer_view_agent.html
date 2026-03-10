@@ -1,0 +1,133 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: #f5f8f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    margin-top: 60px;
+  }
+
+  h2 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    border-left: 6px solid #28a745;
+    padding-left: 15px;
+  }
+
+  .search-form {
+    margin-bottom: 25px;
+  }
+
+  .table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .table thead {
+    background: linear-gradient(to right, #28a745, #218838);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .table tbody tr:hover {
+    background: #eafbee;
+    transition: 0.2s ease-in-out;
+  }
+
+  .table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 14px 10px;
+  }
+
+  img {
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  img:hover {
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="mb-3">
+    <a href="{% url 'agent-dashboard' %}" class="btn btn-outline-success">
+      <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+    </a>
+  </div>
+
+  <h2>All Registered Farmers</h2>
+
+  <!-- Search Bar -->
+  <form method="get" class="search-form d-flex">
+    <input type="text" name="farmer_id" value="{{ request.GET.farmer_id }}" class="form-control me-2" placeholder="Search by Farmer ID">
+    <button type="submit" class="btn btn-success">Search</button>
+    {% if request.GET.farmer_id %}
+      <a href="{% url 'farmer-view' %}" class="btn btn-secondary ms-2">Reset</a>
+    {% endif %}
+  </form>
+
+  <!-- Show Search Result Info -->
+  {% if request.GET.farmer_id %}
+    <p class="text-muted">Showing results for: <strong>{{ request.GET.farmer_id }}</strong></p>
+  {% endif %}
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>FARMER ID</th>
+          <th>NAME</th>
+          <th>VILLAGE</th>
+          <th>DISTRICT</th>
+          <th>MOBILE</th>
+          <th>PHOTO</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for farmer in farmers %}
+        <tr>
+          <td>{{ farmer.farmer_id }}</td>
+          <td>{{ farmer.name }}</td>
+          <td>{{ farmer.village }}</td>
+          <td>{{ farmer.district }}</td>
+          <td>{{ farmer.mobile_no }}</td>
+          <td>
+            {% if farmer.photo %}
+              <img src="{{ farmer.photo.url }}" alt="Farmer Photo" width="80" height="80">
+            {% else %}
+              <span class="text-muted">No Photo</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center text-danger">No farmers found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

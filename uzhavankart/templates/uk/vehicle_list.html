@@ -1,0 +1,56 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Vehicle Registrations</h2>
+        <!-- Back Button -->
+        <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+    </div>
+
+    <div class="card shadow p-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Driver ID</th>
+                    <th>Owner Name</th>
+                    <th>Vehicle Type</th>
+                    <th>Company</th>
+                    <th>Registration Number</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle.vehicle_id }}</td>
+                    <td>{{ vehicle.driver_id }}</td>
+                    <td>{{ vehicle.owner_name }}</td>
+                    <td>{{ vehicle.vehicle_type }}</td>
+                    <td>{{ vehicle.vehicle_company }}</td>
+                    <td>{{ vehicle.registration_number }}</td>
+                    <td>
+                        {% if vehicle.vehicle_img %}
+                            <img src="{{ vehicle.vehicle_img.url }}" width="80" height="50" class="rounded shadow-sm"/>
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'vehicle_update' vehicle.vehicle_id %}" class="btn btn-sm btn-primary">Update</a>
+                        <a href="{% url 'vehicle_delete' vehicle.vehicle_id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No vehicles registered yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Update Driver - {{ driver.driver_id }}</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">Driver ID</label>
+            <input type="text" class="form-control" value="{{ driver.driver_id }}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{ driver.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control" value="{{ driver.phone }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">License Number</label>
+            <input type="text" name="license_number" class="form-control" value="{{ driver.license_number }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-control" rows="3" required>{{ driver.address }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Current Photo</label><br>
+            {% if driver.photo %}
+                <img src="{{ driver.photo.url }}" width="100" class="rounded mb-2">
+            {% else %}
+                <span class="text-muted">No photo uploaded</span>
+            {% endif %}
+            <input type="file" name="photo" class="form-control mt-2">
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Driver</button>
+        <a href="{% url 'driver_manage' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

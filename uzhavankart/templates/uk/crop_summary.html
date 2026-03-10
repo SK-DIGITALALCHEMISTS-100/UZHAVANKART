@@ -1,0 +1,40 @@
+{% extends 'uk/base.html' %}
+
+{% block title %}Crop Summary | Uzhavan Kart{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4 text-success"><center>Crop Summary</center></h2>
+        <div class="mb-4">
+    <a href="{% url 'hub-dashboard' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Crop Name</th>
+                    <th>Total Quantity (kg)</th>
+                    <th>Price per Kg</th>
+                    <th>Total Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for crop in crops %}
+                <tr>
+                    <td>{{ crop.name_of_crop }}</td>
+                    <td>{{ crop.total_kg }}</td>
+                    <td>₹{{ crop.price_per_kg }}</td>
+                    <td>₹{{ crop.total_value }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No crop entries found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

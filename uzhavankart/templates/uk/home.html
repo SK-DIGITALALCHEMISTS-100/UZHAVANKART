@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uzhavan Kart | From Farm to Table</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      scroll-behavior: smooth;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #2d6a4f !important;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar-brand img {
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: #2d6a4f !important;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #40916c, #2d6a4f);
+      color: white;
+      padding: 120px 0;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: bold;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    .btn-custom {
+      background-color: #fcbf49;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-custom:hover {
+      background-color: #f77f00;
+      color: white;
+    }
+
+    .section-heading {
+      color: #2d6a4f;
+      font-weight: 700;
+    }
+
+    .feature-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      transition: 0.3s ease;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .graph-section {
+      background: #fff;
+      padding: 60px 0;
+    }
+
+    .contact-section {
+      background: #2d6a4f;
+      color: white;
+      padding: 60px 0;
+    }
+
+    .footer {
+      background-color: #1b4332;
+      color: #fff;
+      padding: 20px 0;
+    }
+
+    .footer a {
+      color: #fcbf49;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+         <img src="{% static 'uk/uklogo.png' %}" alt="Uzhavan Kart Logo" width="50" height="50" class="me-2">
+        Uzhavan Kart
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+          <li class="nav-item"><a class="nav-link" href="#graphs">Insights</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item"><a class="btn btn-custom ms-3" href="#">Get Started</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <img src="{% static 'uk/uklogo.png' %}" alt="Uzhavan Kart Logo" class="mb-4" style="height:250px; border-radius:50%;">
+      <h1>Connecting Farmers Directly to Customers</h1>
+      <p>Fresh produce delivered from field to your doorstep – within 20 minutes!</p>
+      <a href="{% url 'employee-login' %}" class="btn btn-lg btn-custom mt-4">Explore Now</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="section-heading">About Uzhavan Kart</h2>
+      <p class="lead mt-3">Uzhavan Kart is a revolutionary platform that enables farmers to sell their products directly to customers, cutting out middlemen and ensuring quality, freshness, and fair pricing.</p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-5">
+    <div class="container">
+      <h2 class="text-center section-heading mb-5">Why Choose Us?</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="feature-box text-center">
+            <i class="bi bi-truck fs-1 text-success mb-3"></i>
+            <h5>Fast Delivery</h5>
+            <p>Products delivered within 20 minutes from your local hub.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-box text-center">
+            <i class="bi bi-person-heart fs-1 text-success mb-3"></i>
+            <h5>Direct From Farmers</h5>
+            <p>Empowering local farmers by eliminating middlemen.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-box text-center">
+            <i class="bi bi-box-seam fs-1 text-success mb-3"></i>
+            <h5>Fresh & Organic</h5>
+            <p>Get naturally grown vegetables, fruits, and groceries daily.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Graphs Section -->
+  <section id="graphs" class="graph-section">
+    <div class="container">
+      <h2 class="text-center section-heading mb-5">Our Impact in Numbers</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <canvas id="farmersChart"></canvas>
+        </div>
+        <div class="col-md-6">
+          <canvas id="customersChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / CTA Section -->
+  <section class="contact-section" id="contact">
+    <div class="container text-center">
+      <h2 class="mb-4">Get in Touch</h2>
+      <p class="mb-4">Are you a farmer or customer? Join the movement today!</p>
+      <a href="{% url 'contact' %}" class="btn btn-light btn-lg">Join Uzhavan Kart</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer text-center">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Uzhavan Kart. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a> · <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Farmer Growth Chart
+    const ctx1 = document.getElementById('farmersChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['2021', '2022', '2023', '2024', '2025'],
+        datasets: [{
+          label: 'Farmers Onboarded',
+          data: [100, 300, 600, 1200, 2000],
+          borderColor: '#2d6a4f',
+          backgroundColor: 'rgba(45, 106, 79, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      }
+    });
+
+    // Customer Growth Chart
+    const ctx2 = document.getElementById('customersChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['2021', '2022', '2023', '2024', '2025'],
+        datasets: [{
+          label: 'Customers Served',
+          data: [500, 1200, 2500, 4000, 7000],
+          backgroundColor: '#fcbf49'
+        }]
+      }
+    });
+  </script>
+</body>
+</html>

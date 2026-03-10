@@ -1,0 +1,105 @@
+{% extends "uk/base.html" %}
+{% block content %}
+<style>
+    .update-price-container {
+        max-width: 420px;
+        margin: auto;
+        background: #ffffff;
+        padding: 35px 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in-out;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    .update-price-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+        font-size: 26px;
+        letter-spacing: 1px;
+    }
+
+    .update-price-container img {
+        width: 160px;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 25px;
+        border-radius: 12px;
+        border: 3px solid #e0e0e0;
+    }
+
+    .update-price-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .update-price-container form input[type="text"],
+    .update-price-container form input[type="number"] {
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        margin-bottom: 15px;
+    }
+
+    .update-price-container form input:focus {
+        border-color: #4caf50;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+    }
+
+    .update-price-container button,
+    .update-price-container .back-btn {
+        padding: 12px;
+        text-align: center;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .update-price-container button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        cursor: pointer;
+    }
+
+    .update-price-container button:hover {
+        background-color: #388e3c;
+    }
+
+    .update-price-container .back-btn {
+        background-color: #f44336;
+        color: white;
+        display: block;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .update-price-container .back-btn:hover {
+        background-color: #d32f2f;
+    }
+</style>
+
+<div class="update-price-container">
+    <h2>Update Price</h2>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+        <a href="{% url 'product_list' %}" class="back-btn">← Back</a>
+    </form>
+</div>
+{% endblock %}

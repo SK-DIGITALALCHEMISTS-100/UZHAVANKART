@@ -1,0 +1,62 @@
+{% extends 'uk/base.html' %}
+
+{% block title %}Stock List | Uzhavan Kart{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4 text-success">Stock List</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="mb-4">
+    <a href="{% url 'hub-dashboard' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-success">
+                <tr>
+                    <th>ID</th>
+                    <th>Crop Name</th>
+                    <th>Stock Type</th>
+                    <th>Quantity (kg)</th>
+                    <th>Price (per kg)</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.id }}</td>
+                    <td>{{ stock.crop_name }}</td>
+                    <td>{{ stock.get_stock_type_display }}</td>
+                    <td>{{ stock.quantity_kg }}</td>
+                    <td>₹{{ stock.price_per_kg }}</td>
+                    <td>
+                        {% if stock.stock_image %}
+                            <img src="{{ stock.stock_image.url }}" alt="{{ stock.crop_name }}" width="80" height="60">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'update_stock' stock.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'delete_stock' stock.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No stocks available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

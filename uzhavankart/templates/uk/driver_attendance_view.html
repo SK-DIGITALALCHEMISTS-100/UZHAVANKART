@@ -1,0 +1,41 @@
+{% extends "uk/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Driver Attendance Records</h2>
+
+    <form method="GET" class="mb-3">
+        <input type="text" name="driver_id" placeholder="Enter Driver ID" class="form-control" required>
+        <button type="submit" class="btn btn-primary mt-2">View Attendance</button>
+
+           <div class="mt-3">
+        <a href="{% url 'driver_attendance' %}" class="btn btn-secondary">
+            ← Back
+        </a>
+    </div>
+    </form>
+
+    {% if driver %}
+        <h4>Driver: {{ driver.name }} ({{ driver.driver_id }})</h4>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+           <tbody>
+    {% for record in attendance_records %}
+    <tr>
+        <td>{{ record.date }}</td>
+        <td>
+            {{ record.get_status_display }}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+        </table>
+    {% elif attendance_records == None %}
+        <p class="text-danger">No records found for this driver.</p>
+    {% endif %}
+</div>
+{% endblock %}

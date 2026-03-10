@@ -1,0 +1,152 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+<style>
+    .section-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        flex-wrap: wrap;
+    }
+
+    .section-tab {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s;
+        border: 1px solid #a5d6a7;
+    }
+
+    .section-tab.active,
+    .section-tab:hover {
+        background-color: #2e7d32;
+        color: #ffffff;
+    }
+
+    .top-bar {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px 30px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #ffffff;
+        color: #2e7d32;
+        border: 1px solid #2e7d32;
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+        background-color: #2e7d32;
+        color: #ffffff;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+        padding: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .product-card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 15px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .product-name {
+        font-weight: 600;
+        color: #333;
+        margin: 5px 0;
+    }
+
+    .price {
+        font-weight: bold;
+        color: #1b5e20;
+        font-size: 1.1em;
+    }
+
+    @media (max-width: 600px) {
+        .product-card img {
+            height: 100px;
+        }
+    }
+</style>
+
+<BR><h2 style="text-align:center;">UPDATE MARKET PRODUCT PRICE </h2>
+
+<!-- Category Tabs -->
+<div class="section-tabs">
+    <div class="section-tab active" onclick="filterProducts('All')">All</div>
+    <div class="section-tab" onclick="filterProducts('Vegetables')">Vegetables</div>
+    <div class="section-tab" onclick="filterProducts('Fruits')">Fruits</div>
+    <div class="section-tab" onclick="filterProducts('Oils')">Oils</div>
+    <div class="section-tab" onclick="filterProducts('Seeds')">Seeds</div>
+</div>
+
+<!-- Back Button -->
+<div class="top-bar">
+    <a href="{% url 'market-dashboard' %}" class="back-btn">
+        <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+</div>
+
+<!-- Product Grid -->
+<div class="product-grid">
+    {% for product in products %}
+        <div class="product-card" data-category="{{ product.category }}">
+            <a href="{% url 'update_price' product.id %}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </a>
+            <p class="product-name">{{ product.name }}</p>
+            <p class="price">₹{{ product.price }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- JavaScript Filter Logic -->
+<script>
+    function filterProducts(category) {
+        const cards = document.querySelectorAll('.product-card');
+        const tabs = document.querySelectorAll('.section-tab');
+
+        tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+
+        cards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+            card.style.display = (category === 'All' || cardCategory === category) ? 'block' : 'none';
+        });
+    }
+</script>
+
+{% endblock %}

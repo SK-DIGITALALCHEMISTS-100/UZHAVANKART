@@ -1,0 +1,29 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+
+<div class="container mt-5">
+    <h2 class="mb-4">Add Crop Product</h2>
+
+     <div class="mb-4">
+    <a href="{% url 'agent-dashboard' %}" class="btn btn-outline-primary">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+
+    <form method="POST" class="border p-4 rounded shadow">
+        {% csrf_token %}
+
+        <!-- Farmer ID field (manual, not from ModelForm) -->
+        <div class="mb-3">
+            <label for="farmer_id" class="form-label">Farmer ID</label>
+            <input type="text" name="farmer_id" id="farmer_id" class="form-control" required>
+        </div>
+
+        <!-- ModelForm fields -->
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-success">Save Crop</button>
+    </form>
+</div><br>
+{% endblock %}

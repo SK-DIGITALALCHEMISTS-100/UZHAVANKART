@@ -1,0 +1,101 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block title %}Employee Sub Modules - Uzhavan Kart{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background-color: #f5f5f5;
+  }
+  .card-custom {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  .card-icon {
+    font-size: 2rem;
+    color: #0d6efd;
+  }
+  .card-custom h5 {
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .card-custom p {
+    font-size: 0.9rem;
+    color: #555;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 text-center flex-grow-1">EMPLOYEE MANAGEMENT</h2>
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary ms-3">
+      <i class="bi bi-arrow-left-circle"></i> Back
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Employee Registration -->
+    <div class="col-md-4">
+      <a href="{% url 'employee_register' %}" class="card card-custom p-3 d-block">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-person-plus-fill card-icon me-3"></i>
+          <div>
+            <h5>Employee Registration</h5>
+            <p>Register a new employee into the system.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Employee Data View -->
+    <div class="col-md-4">
+      <a href="{% url 'employee_search' %}" class="card card-custom p-3 d-block">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-table card-icon me-3"></i>
+          <div>
+            <h5>Employee Data View</h5>
+            <p>Browse all registered employee details.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Employee Update -->
+    <div class="col-md-4">
+      <a href="{% url 'employee_update' %}" class="card card-custom p-3 d-block">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-pencil-square card-icon me-3"></i>
+          <div>
+            <h5>Employee Update</h5>
+            <p>Modify existing employee information.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Employee Delete -->
+    <div class="col-md-4">
+      <a href="{% url 'employee_delete' %}" class="card card-custom p-3 d-block">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-trash3 card-icon me-3"></i>
+          <div>
+            <h5>Employee Delete</h5>
+            <p>Remove an employee from the system.</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

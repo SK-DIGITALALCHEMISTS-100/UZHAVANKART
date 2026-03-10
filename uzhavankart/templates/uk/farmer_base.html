@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}UZHAVAN KART{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1; /* pushes footer to bottom */
+        }
+
+        /* HEADER */
+        .navbar-custom {
+            background: linear-gradient(90deg, #006400, #00b894);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .nav-link {
+            font-weight: 500;
+            margin-right: 15px;
+            transition: color 0.3s ease-in-out;
+        }
+        .nav-link:hover {
+            color: #ffe066 !important;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #1a1a1a;
+            color: #ddd;
+            padding: 20px 0 10px;
+            font-size: 0.95rem;
+        }
+        footer h5 {
+            color: #fff;
+             margin-bottom: 12px; /* reduced spacing */
+    font-size: 1.05rem; 
+        }
+        footer a {
+            color: #ddd;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        footer a:hover {
+            color: #00b894;
+            text-decoration: underline;
+        }
+        .footer-bottom {
+             border-top: 1px solid rgba(255,255,255,0.2);
+    margin-top: 15px;
+    padding-top: 8px;
+    font-size: 0.8rem;
+    text-align: center;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- HEADER -->
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container">
+    <!-- Logo + Text -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="{% static 'uk/uklogo.png' %}" alt="Uzhavan Kart Logo" width="40" height="40" class="me-2">
+      <span>UZHAVAN KART</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>
+
+
+<!-- PAGE CONTENT -->
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <h5>About Uzhavan Kart</h5>
+        <p>Connecting farmers directly with consumers, ensuring fresh produce, fair prices, and sustainable agriculture.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'farmer_home' %}"><i class="bi bi-chevron-right me-2"></i> Home</a></li>
+          <li><a href="{% url 'about' %}"><i class="bi bi-chevron-right me-2"></i> About</a></li>
+          <li><a href="{% url 'footer_market_price' %}"><i class="bi bi-chevron-right me-2"></i> Market Prices</a></li>
+          <li><a href="{% url 'contact' %}"><i class="bi bi-chevron-right me-2"></i> Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5>Contact Us</h5>
+        <p><i class="bi bi-geo-alt-fill me-2"></i> No:12, Mettu street, KumaraKuppam, Valavanur, viluppuram District, Tamil Nadu 605108.</p>
+        <p><i class="bi bi-telephone-fill me-2"></i> +91 8838818193</p>
+        <p><i class="bi bi-envelope-fill me-2"></i> digitalalchemists00@gmail.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Uzhavan Kart. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

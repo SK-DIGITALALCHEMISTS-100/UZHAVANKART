@@ -1,0 +1,155 @@
+{% extends "uk/base.html" %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(to right, #fdfbfb, #ebedee);
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .registration-container {
+    max-width: 720px;
+    margin: 60px auto;
+    padding: 45px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+  }
+
+  .registration-container:hover {
+    transform: scale(1.005);
+  }
+
+  .title {
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 600;
+    color: #2d6a4f;
+    margin-bottom: 35px;
+    position: relative;
+  }
+
+  .title::after {
+    content: "";
+    width: 70px;
+    height: 4px;
+    background: #52b788;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -12px;
+    border-radius: 10px;
+  }
+
+  .form-floating > .form-control,
+  .form-floating > .form-select {
+    height: 56px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  .form-control:focus {
+    border-color: #40916c;
+    box-shadow: 0 0 0 0.15rem rgba(64, 145, 108, 0.25);
+  }
+
+  .btn-custom {
+    background: linear-gradient(to right, #40916c, #2d6a4f);
+    color: white;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-custom:hover {
+    background: #1b4332;
+    transform: scale(1.02);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #333;
+  }
+
+  .btn-outline-success {
+    font-weight: 500;
+    border-radius: 8px;
+  }
+</style>
+
+<div class="container">
+  <div class="registration-container">
+    
+
+    <div class="title">FARMER REGISTRATIONS</div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-floating mb-3">
+        <input type="text" name="farmer_id" id="id_farmer_id" class="form-control" placeholder="Farmer ID" required>
+        <label for="id_farmer_id">Farmer ID</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="name" id="id_name" class="form-control" placeholder="Full Name" required>
+        <label for="id_name">Full Name</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="village" id="id_village" class="form-control" placeholder="Village" required>
+        <label for="id_village">Village</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="district" id="id_district" class="form-control" placeholder="District" required>
+        <label for="id_district">District</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea name="address" id="id_address" class="form-control" placeholder="Address" style="height: 120px;" required></textarea>
+        <label for="id_address">Address</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="number" step="0.01" name="land_sqft" id="id_land_sqft" class="form-control" placeholder="Land in Sq.Ft" required>
+        <label for="id_land_sqft">Land in Sq.Ft</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="crop" id="id_crop" class="form-control" placeholder="Main Crop" required>
+        <label for="id_crop">Main Crop</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="mobile_no" id="id_mobile_no" class="form-control" placeholder="Mobile Number" required>
+        <label for="id_mobile_no">Mobile Number</label>
+      </div>
+
+      <div class="mb-4">
+        <label for="id_photo" class="form-label">Upload Photo <i class="fas fa-upload ms-1"></i></label>
+        <input type="file" name="photo" id="id_photo" class="form-control">
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-custom">
+          <i class="fas fa-paper-plane me-2"></i> Register Farmer
+        
+        </button>
+      </div>
+      <br>
+      <div class="d-grid">
+  <a href="{% url 'farmer-dashboard-man' %}" class="btn btn-outline-success">
+    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+  </a>
+</div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

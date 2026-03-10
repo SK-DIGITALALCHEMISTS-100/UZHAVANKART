@@ -1,0 +1,54 @@
+{% extends "uk/customer_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4 bg-white">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="fw-bold text-success">
+        🌾 Welcome, <span class="text-dark">{{ customer.name }}</span> 👋
+      </h2>
+      <a href="{% url 'customer_logout' %}" class="btn btn-danger btn-sm px-3 shadow-sm">
+        Logout
+      </a>
+    </div>
+
+    <!-- User Info -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded shadow-sm">
+          <strong>📧 Email</strong>
+          <p class="mb-0 text-muted">{{ customer.email }}</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded shadow-sm">
+          <strong>📱 Mobile</strong>
+          <p class="mb-0 text-muted">{{ customer.mobile }}</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 bg-light rounded shadow-sm">
+          <strong>🎂 DOB</strong>
+          <p class="mb-0 text-muted">{{ customer.dob }}</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Next Steps -->
+    <h5 class="fw-bold text-secondary">🚀 Next Steps</h5>
+    <div class="list-group list-group-flush mt-2">
+      <a href="{% url 'browse_products_customer' %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        🛒 Browse Products <span class="badge bg-success rounded-pill">New</span>
+      </a>
+      <a href="{% url 'view_orders' %}" class="list-group-item list-group-item-action">
+        📦 My Orders
+      </a>
+   
+    </div>
+  </div>
+</div><br>
+{% endblock %}

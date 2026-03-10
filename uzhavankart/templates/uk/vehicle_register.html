@@ -1,0 +1,19 @@
+{% extends "uk/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Register New Vehicle</h2>
+
+    <div class="card shadow p-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-between mt-3">
+                <button type="submit" class="btn btn-success">Register</button>
+                <a href="{% url 'hub-dashboard' %}" class="btn btn-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
