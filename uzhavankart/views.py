@@ -992,9 +992,8 @@ def delete_staff(request, staff_id):
     messages.success(request, "Staff deleted successfully!")
     return redirect("staff_management")
 
-
-# uk/views.py
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.utils.timezone import now
 from .models import Staff, StaffAttendance
 
@@ -1006,7 +1005,15 @@ def staff_attendance(request):
         staff_id = request.POST.get("staff_id")
         status = request.POST.get("status")
 
-        staff = get_object_or_404(Staff, staff_id=staff_id)
+        # Check if staff exists instead of 404
+        try:
+            staff = Staff.objects.get(staff_id=staff_id)
+        except Staff.DoesNotExist:
+            messages.error(request, f"Staff ID '{staff_id}' not found. Please check and try again.")
+            return render(request, "uk/staff_attendance.html", {
+                "staff": None,
+                "attendance_marked": False,
+            })
 
         # Prevent duplicate marking for the same day
         attendance, created = StaffAttendance.objects.get_or_create(
@@ -1015,22 +1022,18 @@ def staff_attendance(request):
             defaults={"status": status}
         )
 
-        if not created:  
-            attendance.status = status  
+        if not created:
+            attendance.status = status
             attendance.save()
 
         attendance_marked = True
+        messages.success(request, f"Attendance marked for {staff.name}.")
 
     return render(request, "uk/staff_attendance.html", {
         "staff": staff,
         "attendance_marked": attendance_marked,
     })
 
-
-
-# uk/views.py
-from django.shortcuts import render, get_object_or_404
-from .models import Staff, StaffAttendance
 
 def staff_attendance_view(request):
     staff = None
@@ -1042,14 +1045,12 @@ def staff_attendance_view(request):
             staff = Staff.objects.get(staff_id=staff_id)
             attendance_records = StaffAttendance.objects.filter(staff=staff).order_by('-date')
         except Staff.DoesNotExist:
-            staff = None
-            attendance_records = None
+            messages.error(request, f"Staff ID '{staff_id}' not found.")
 
     return render(request, "uk/staff_attendance_view.html", {
         "staff": staff,
         "attendance_records": attendance_records
     })
-
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Driver, DriverAttendance
