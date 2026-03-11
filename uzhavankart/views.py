@@ -997,37 +997,65 @@ from django.contrib import messages
 from django.utils.timezone import now
 from .models import Staff, StaffAttendance
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils.timezone import now
+from .models import Employee, Staff, StaffAttendance
+
 def staff_attendance(request):
     staff = None
     attendance_marked = False
 
     if request.method == "POST":
-        staff_id = request.POST.get("staff_id")
+        emp_id = request.POST.get("staff_id")
         status = request.POST.get("status")
 
-        # Check if staff exists instead of 404
+        # Step 1: Cross-check Employee table
         try:
-            staff = Staff.objects.get(staff_id=staff_id)
-        except Staff.DoesNotExist:
-            messages.error(request, f"Staff ID '{staff_id}' not found. Please check and try again.")
+            employee = Employee.objects.get(emp_id=emp_id)
+        except Employee.DoesNotExist:
+            messages.error(request, f"❌ Employee ID '{emp_id}' not found.")
             return render(request, "uk/staff_attendance.html", {
                 "staff": None,
                 "attendance_marked": False,
             })
 
-        # Prevent duplicate marking for the same day
-        attendance, created = StaffAttendance.objects.get_or_create(
-            staff=staff,
-            date=now().date(),
-            defaults={"status": status}
+        # Step 2: Check role is Staff or Driver
+        if employee.job_role not in ['STAFF', 'DRIVER', 'Staff', 'Driver']:
+            messages.error(request, f"❌ '{employee.name}' is not a Staff or Driver.")
+            return render(request, "uk/staff_attendance.html", {
+                "staff": None,
+                "attendance_marked": False,
+            })
+
+        # Step 3: Get or create Staff record from Employee
+        staff, created = Staff.objects.get_or_create(
+            staff_id=employee.emp_id,
+            defaults={
+                'name': employee.name,
+                'phone': employee.mobile_no,
+                'role': employee.job_role,
+                'address': employee.address,
+            }
         )
 
-        if not created:
-            attendance.status = status
-            attendance.save()
+        # Step 4: Mark attendance
+        today = now().date()
+        existing = StaffAttendance.objects.filter(staff=staff, date=today).first()
+
+        if existing:
+            existing.status = status
+            existing.save()
+            messages.success(request, f"✅ Attendance updated to '{status}' for {staff.name}.")
+        else:
+            StaffAttendance.objects.create(
+                staff=staff,
+                date=today,
+                status=status,
+            )
+            messages.success(request, f"✅ Attendance marked as '{status}' for {staff.name}.")
 
         attendance_marked = True
-        messages.success(request, f"Attendance marked for {staff.name}.")
 
     return render(request, "uk/staff_attendance.html", {
         "staff": staff,

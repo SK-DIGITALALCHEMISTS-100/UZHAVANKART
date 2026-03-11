@@ -140,13 +140,19 @@ class Staff(models.Model):
 class StaffAttendance(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     staff_code = models.CharField(max_length=20)
-    date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=[('Present', 'Present'), ('Absent', 'Absent')])
+    date = models.DateField()  # ← remove auto_now_add=True
+    status = models.CharField(max_length=10, choices=[
+        ('Present', 'Present'), 
+        ('Absent', 'Absent')
+    ])
 
     def save(self, *args, **kwargs):
         if self.staff:
             self.staff_code = self.staff.staff_id
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.staff_code} - {self.date} - {self.status}"
 
 
 # ─── Driver Attendance ────────────────────────────────────────────────────────
