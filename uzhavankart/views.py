@@ -1275,6 +1275,7 @@ def customer_logout(request):
 import random
 from django.utils import timezone
 from .models import Customer, OTPStore
+from django.core.mail import EmailMessage
 
 def forgot_password(request):
     if request.method == "POST":
@@ -1291,22 +1292,24 @@ def forgot_password(request):
                     defaults={'otp': otp}
                 )
 
-                send_mail(
-                    "Uzhavan Kart - Password Reset OTP",
-                    f"""
-Hello {user.name},
+                # Send email with proper headers
+                mail = EmailMessage(
+                    subject="Uzhavan Kart - Password Reset OTP",
+                    body=f"""Hello {user.name},
 
 Your OTP for password reset is: {otp}
 
-This OTP is valid for 10 minutes.
+This OTP expires in 10 minutes.
+Do not share this OTP with anyone.
 
 Regards,
-Uzhavan Kart Team
-                    """,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [email],
-                    fail_silently=False,
+Uzhavan Kart Team""",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[email],
+                    reply_to=['digitalalchemists00@gmail.com'],
                 )
+                mail.send(fail_silently=False)
+
                 messages.success(request, "OTP sent to your email.")
                 return redirect("reset_password")
 
