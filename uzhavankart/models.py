@@ -102,7 +102,13 @@ class Stock(models.Model):
     def __str__(self):
         return f"{self.crop_name} ({self.get_stock_type_display()}) - {self.quantity_kg} kg"
 
+class OTPStore(models.Model):
+    email = models.EmailField(unique=True)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.email} - {self.otp}"
 # ─── Driver ───────────────────────────────────────────────────────────────────
 class Driver(models.Model):
     driver_id = models.CharField(max_length=20, unique=True)

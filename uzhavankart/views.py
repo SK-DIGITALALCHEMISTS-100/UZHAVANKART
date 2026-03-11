@@ -1272,10 +1272,10 @@ def customer_logout(request):
     messages.success(request, "Logged out successfully.")
     return redirect("customer_login")
 
+import random
+from django.utils import timezone
+from .models import Customer, OTPStore
 
-# ---------------------------
-# Forgot Password - Send OTP
-# ---------------------------
 def forgot_password(request):
     if request.method == "POST":
         form = ForgotPasswordForm(request.POST)
@@ -1284,28 +1284,41 @@ def forgot_password(request):
             try:
                 user = Customer.objects.get(email=email)
                 otp = str(random.randint(100000, 999999))
-                OTP_STORE[email] = otp
 
-                # Send OTP via Email
+                # Save OTP to database
+                OTPStore.objects.update_or_create(
+                    email=email,
+                    defaults={'otp': otp}
+                )
+
                 send_mail(
                     "Uzhavan Kart - Password Reset OTP",
-                    f"Your OTP for password reset is: {otp}",
+                    f"""
+Hello {user.name},
+
+Your OTP for password reset is: {otp}
+
+This OTP is valid for 10 minutes.
+
+Regards,
+Uzhavan Kart Team
+                    """,
                     settings.DEFAULT_FROM_EMAIL,
                     [email],
                     fail_silently=False,
                 )
                 messages.success(request, "OTP sent to your email.")
                 return redirect("reset_password")
+
             except Customer.DoesNotExist:
                 messages.error(request, "Email not registered")
+            except Exception as e:
+                messages.error(request, f"Failed to send OTP: {str(e)}")
     else:
         form = ForgotPasswordForm()
     return render(request, "uk/forgot_password.html", {"form": form})
 
 
-# ---------------------------
-# Reset Password - Verify OTP
-# ---------------------------
 def reset_password(request):
     if request.method == "POST":
         form = ResetPasswordForm(request.POST)
@@ -1313,31 +1326,28 @@ def reset_password(request):
             otp = form.cleaned_data["otp"]
             new_password = form.cleaned_data["new_password1"]
 
-            # Find email with OTP
-            email = None
-            for k, v in OTP_STORE.items():
-                if v == otp:
-                    email = k
-                    break
+            try:
+                # Get OTP from database
+                otp_record = OTPStore.objects.get(otp=otp)
+                email = otp_record.email
 
-            if email:
-                try:
-                    user = Customer.objects.get(email=email)
-                    user.set_password(new_password)  # ✅ hash password
-                    user.save()
-                    OTP_STORE.pop(email, None)
-                    messages.success(request, "Password reset successful. Please login.")
-                    return redirect("customer_login")
-                except Customer.DoesNotExist:
-                    messages.error(request, "User not found")
-            else:
-                messages.error(request, "Invalid OTP")
+                user = Customer.objects.get(email=email)
+                user.set_password(new_password)
+                user.save()
+
+                # Delete OTP after use
+                otp_record.delete()
+
+                messages.success(request, "Password reset successful. Please login.")
+                return redirect("customer_login")
+
+            except OTPStore.DoesNotExist:
+                messages.error(request, "Invalid OTP. Please try again.")
+            except Customer.DoesNotExist:
+                messages.error(request, "User not found.")
     else:
         form = ResetPasswordForm()
     return render(request, "uk/reset_password.html", {"form": form})
-
-
-# ---------------------------
 # Customer Home
 # ---------------------------
 def customer_home(request):
