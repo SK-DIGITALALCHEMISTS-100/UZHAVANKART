@@ -291,36 +291,7 @@
       <form method="post" novalidate>
         {% csrf_token %}
 
-        <!-- DOB Calendar -->
-        <div class="dob-wrapper" id="dobWrapper">
-          <label class="dob-label">📅 Date of Birth</label>
-          <div class="dob-input-row">
-            <span class="dob-display placeholder" id="dobDisplay">Select your date of birth</span>
-            <button type="button" class="dob-cal-btn" id="dobToggle" aria-label="Open calendar">📅</button>
-          </div>
-          <input type="hidden" name="date_of_birth" id="dobHidden">
-          <div class="cal-popup" id="calPopup">
-            <div class="cal-nav">
-              <button type="button" id="calPrev">&#8249;</button>
-              <div class="cal-month-year">
-                <select class="cal-select" id="calMonthSel"></select>
-                <select class="cal-select" id="calYearSel"></select>
-              </div>
-              <button type="button" id="calNext">&#8250;</button>
-            </div>
-            <div class="cal-grid">
-              <div class="cal-days-header">
-                <span>Su</span><span>Mo</span><span>Tu</span>
-                <span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-              </div>
-              <div class="cal-cells" id="calCells"></div>
-            </div>
-            <div class="cal-actions">
-              <button type="button" class="cal-action-btn clear" id="calClear">Clear</button>
-              <button type="button" class="cal-action-btn today-btn" id="calToday">Today</button>
-            </div>
-          </div>
-        </div>
+        
 
         {{ form.as_p }}
 
