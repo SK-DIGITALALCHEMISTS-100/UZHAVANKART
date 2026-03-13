@@ -369,6 +369,94 @@
     .panel-left { display: none; }
     .panel-right { padding: 40px 24px; }
   }
+
+  /* ── DOB Calendar Picker ── */
+  .dob-wrapper { position: relative; margin-bottom: 18px; }
+  .dob-label {
+    display: block; font-size: 0.82rem; font-weight: 600;
+    color: var(--forest); letter-spacing: 0.03em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .dob-input-row {
+    display: flex; align-items: center;
+    border: 1.5px solid #e2e8e4; border-radius: 12px;
+    background: #fafafa; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .dob-input-row:focus-within {
+    border-color: var(--sage); background: #fff;
+    box-shadow: 0 0 0 3px rgba(64,145,108,0.12);
+  }
+  .dob-display {
+    flex: 1; padding: 12px 16px;
+    font-family: "DM Sans", sans-serif; font-size: 0.95rem;
+    color: #1a1a1a; background: transparent; border: none; outline: none; cursor: pointer;
+  }
+  .dob-display.placeholder { color: #b5bfba; }
+  .dob-cal-btn {
+    padding: 10px 14px; background: none; border: none;
+    cursor: pointer; font-size: 18px; color: var(--sage); transition: color 0.2s;
+  }
+  .dob-cal-btn:hover { color: var(--forest); }
+
+  .cal-popup {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0;
+    z-index: 999; background: #fff; border: 1.5px solid #e2e8e4;
+    border-radius: 16px; box-shadow: 0 16px 48px rgba(27,67,50,0.14);
+    width: 300px; overflow: hidden;
+    animation: calIn 0.22s cubic-bezier(0.22,1,0.36,1);
+  }
+  .cal-popup.open { display: block; }
+  @keyframes calIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px 10px; background: var(--forest); color: #fff;
+  }
+  .cal-nav button {
+    background: rgba(255,255,255,0.15); border: none; color: #fff;
+    border-radius: 8px; width: 30px; height: 30px; font-size: 15px;
+    cursor: pointer; transition: background 0.18s;
+  }
+  .cal-nav button:hover { background: rgba(255,255,255,0.28); }
+  .cal-month-year { display: flex; gap: 6px; align-items: center; }
+  .cal-select {
+    background: rgba(255,255,255,0.15); border: none; color: #fff;
+    border-radius: 8px; padding: 4px 8px;
+    font-family: "DM Sans", sans-serif; font-size: 0.88rem;
+    font-weight: 600; cursor: pointer; outline: none;
+  }
+  .cal-select option { color: #1a1a1a; background: #fff; }
+  .cal-grid { padding: 10px 12px 14px; }
+  .cal-days-header { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
+  .cal-days-header span {
+    text-align: center; font-size: 0.7rem; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 0;
+  }
+  .cal-cells { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+  .cal-cell {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 0.83rem; cursor: pointer; color: #333;
+    transition: background 0.15s, color 0.15s; border: none; background: none;
+    font-family: "DM Sans", sans-serif;
+  }
+  .cal-cell:hover { background: #e8f5ee; color: var(--forest); }
+  .cal-cell.today { font-weight: 700; color: var(--sage); }
+  .cal-cell.selected { background: var(--forest); color: #fff; font-weight: 600; }
+  .cal-cell.selected:hover { background: var(--sage); }
+  .cal-cell.other-month { color: #ccc; }
+  .cal-cell.disabled { color: #e0e0e0; pointer-events: none; }
+  .cal-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 0 12px 12px; }
+  .cal-action-btn {
+    font-family: "DM Sans", sans-serif; font-size: 0.78rem; font-weight: 600;
+    border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; transition: background 0.18s;
+  }
+  .cal-action-btn.clear { background: #f0f0f0; color: #666; }
+  .cal-action-btn.clear:hover { background: #e0e0e0; }
+  .cal-action-btn.today-btn { background: var(--forest); color: #fff; }
+  .cal-action-btn.today-btn:hover { background: var(--sage); }
 </style>
 {% endblock %}
 
@@ -426,6 +514,40 @@
 
       <form method="post" novalidate>
         {% csrf_token %}
+
+        <!-- DOB Calendar Field (injected before form fields) -->
+        <div class="dob-wrapper" id="dobWrapper">
+          <label class="dob-label">📅 Date of Birth</label>
+          <div class="dob-input-row">
+            <span class="dob-display placeholder" id="dobDisplay">Select your date of birth</span>
+            <button type="button" class="dob-cal-btn" id="dobToggle" aria-label="Open calendar">📅</button>
+          </div>
+          <input type="hidden" name="date_of_birth" id="dobHidden">
+
+          <!-- Calendar popup -->
+          <div class="cal-popup" id="calPopup">
+            <div class="cal-nav">
+              <button type="button" id="calPrev">&#8249;</button>
+              <div class="cal-month-year">
+                <select class="cal-select" id="calMonthSel"></select>
+                <select class="cal-select" id="calYearSel"></select>
+              </div>
+              <button type="button" id="calNext">&#8250;</button>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-days-header">
+                <span>Su</span><span>Mo</span><span>Tu</span>
+                <span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+              </div>
+              <div class="cal-cells" id="calCells"></div>
+            </div>
+            <div class="cal-actions">
+              <button type="button" class="cal-action-btn clear" id="calClear">Clear</button>
+              <button type="button" class="cal-action-btn today-btn" id="calToday">Today</button>
+            </div>
+          </div>
+        </div>
+
         {{ form.as_p }}
         <button type="submit" class="btn-signup">
           Create My Account →
@@ -436,12 +558,95 @@
         Already have an account? <a href="{% url 'customer_login' %}">Sign in</a>
       </div>
 
-      <div class="trust-row">
-        <div class="trust-item"><span>🔒</span> Secure</div>
-        <div class="trust-item"><span>✅</span> No spam</div>
-        <div class="trust-item"><span>🇬🇧</span> UK-based</div>
-      </div>
+      
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const MONTHS = ["January","February","March","April","May","June",
+                  "July","August","September","October","November","December"];
+  const today = new Date();
+  let curYear  = today.getFullYear() - 18;
+  let curMonth = today.getMonth();
+  let selected = null;
+
+  const popup    = document.getElementById("calPopup");
+  const toggle   = document.getElementById("dobToggle");
+  const display  = document.getElementById("dobDisplay");
+  const hidden   = document.getElementById("dobHidden");
+  const cells    = document.getElementById("calCells");
+  const monthSel = document.getElementById("calMonthSel");
+  const yearSel  = document.getElementById("calYearSel");
+  const prevBtn  = document.getElementById("calPrev");
+  const nextBtn  = document.getElementById("calNext");
+  const clearBtn = document.getElementById("calClear");
+  const todayBtn = document.getElementById("calToday");
+
+  MONTHS.forEach((m, i) => monthSel.add(new Option(m, i)));
+  monthSel.value = curMonth;
+
+  for (let y = today.getFullYear(); y >= 1920; y--) yearSel.add(new Option(y, y));
+  yearSel.value = curYear;
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+  function formatDisplay(d) { return `${pad(d.getDate())} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+  function formatISO(d)     { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+
+  function renderGrid() {
+    monthSel.value = curMonth; yearSel.value = curYear;
+    cells.innerHTML = "";
+    const first = new Date(curYear, curMonth, 1).getDay();
+    const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+    const daysInPrev  = new Date(curYear, curMonth, 0).getDate();
+    for (let i = first - 1; i >= 0; i--)       addCell(daysInPrev - i, curMonth-1, curYear, true);
+    for (let d = 1; d <= daysInMonth; d++)      addCell(d, curMonth, curYear, false);
+    const rem = (first + daysInMonth) % 7;
+    if (rem) for (let d = 1; d <= 7 - rem; d++) addCell(d, curMonth+1, curYear, true);
+  }
+
+  function addCell(day, month, year, isOther) {
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "cal-cell"; btn.textContent = day;
+    const cellDate = new Date(year, month, day);
+    if (isOther)   btn.classList.add("other-month");
+    if (cellDate.toDateString() === today.toDateString()) btn.classList.add("today");
+    if (selected && cellDate.toDateString() === selected.toDateString()) btn.classList.add("selected");
+    if (cellDate > today) btn.classList.add("disabled");
+    btn.addEventListener("click", () => {
+      selected = cellDate;
+      display.textContent = formatDisplay(cellDate);
+      display.classList.remove("placeholder");
+      hidden.value = formatISO(cellDate);
+      closePopup();
+    });
+    cells.appendChild(btn);
+  }
+
+  function openPopup()  { popup.classList.add("open");    renderGrid(); }
+  function closePopup() { popup.classList.remove("open"); }
+
+  toggle.addEventListener("click",  e => { e.stopPropagation(); popup.classList.contains("open") ? closePopup() : openPopup(); });
+  display.addEventListener("click", e => { e.stopPropagation(); popup.classList.contains("open") ? closePopup() : openPopup(); });
+  prevBtn.addEventListener("click", () => { curMonth--; if (curMonth < 0)  { curMonth = 11; curYear--; } renderGrid(); });
+  nextBtn.addEventListener("click", () => { curMonth++; if (curMonth > 11) { curMonth = 0;  curYear++; } renderGrid(); });
+  monthSel.addEventListener("change", () => { curMonth = +monthSel.value; renderGrid(); });
+  yearSel.addEventListener("change",  () => { curYear  = +yearSel.value;  renderGrid(); });
+  clearBtn.addEventListener("click", () => {
+    selected = null; display.textContent = "Select your date of birth";
+    display.classList.add("placeholder"); hidden.value = ""; renderGrid();
+  });
+  todayBtn.addEventListener("click", () => {
+    curMonth = today.getMonth(); curYear = today.getFullYear(); selected = today;
+    display.textContent = formatDisplay(today); display.classList.remove("placeholder");
+    hidden.value = formatISO(today); closePopup();
+  });
+  document.addEventListener("click", e => {
+    if (!document.getElementById("dobWrapper").contains(e.target)) closePopup();
+  });
+})();
+</script>
 {% endblock %}
