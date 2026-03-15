@@ -1,63 +1,130 @@
 {% extends "uk/customer_base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <h2>Your Cart</h2>
+<div class="container mt-4 px-3">
+  <h2 class="mb-3">🛒 Your Cart</h2>
+
   {% if cart_items %}
     <form method="post">
       {% csrf_token %}
-      <table class="table table-bordered">
-        <tr>
-          <th>Crop</th>
-          <th>Qty</th>
-          <th>Price</th>
-          <th>Subtotal</th>
-          <th>Action</th>
-        </tr>
+
+      <!-- Desktop Table (hidden on mobile) -->
+      <div class="d-none d-md-block">
+        <table class="table table-bordered table-hover align-middle">
+          <thead class="table-success">
+            <tr>
+              <th>Crop</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Subtotal</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart_items %}
+            <tr>
+              <td>{{ item.product.crop_name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>₹{{ item.product.price_per_kg }}</td>
+              <td>₹{{ item.subtotal }}</td>
+              <td>
+                <a href="{% url 'remove_from_cart' item.product.crop_name %}"
+                   class="btn btn-danger btn-sm">
+                  ❌ Remove
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards (hidden on desktop) -->
+      <div class="d-md-none">
         {% for item in cart_items %}
-        <tr>
-          <td>{{ item.product.crop_name }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>₹{{ item.product.price_per_kg }}</td>
-          <td>₹{{ item.subtotal }}</td>
-          <td>
-            <!-- 🔹 Remove Single Item -->
-            <a href="{% url 'remove_from_cart' item.product.crop_name %}" 
-               class="btn btn-danger btn-sm">
-              ❌ Remove
-            </a>
-          </td>
-        </tr>
+        <div class="card mb-3 shadow-sm border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0 fw-bold text-success">
+                🌾 {{ item.product.crop_name }}
+              </h5>
+              <a href="{% url 'remove_from_cart' item.product.crop_name %}"
+                 class="btn btn-danger btn-sm">
+                ❌
+              </a>
+            </div>
+            <div class="row text-center">
+              <div class="col-4">
+                <small class="text-muted d-block">Quantity</small>
+                <span class="fw-semibold">{{ item.quantity }}</span>
+              </div>
+              <div class="col-4">
+                <small class="text-muted d-block">Price/kg</small>
+                <span class="fw-semibold">₹{{ item.product.price_per_kg }}</span>
+              </div>
+              <div class="col-4">
+                <small class="text-muted d-block">Subtotal</small>
+                <span class="fw-semibold text-success">₹{{ item.subtotal }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
         {% endfor %}
-      </table>
+      </div>
+
     </form>
 
-    <div class="d-flex justify-content-between align-items-center">
-      <h4>Total: ₹{{ total }}</h4>
+    <!-- Total & Action Buttons -->
+    <div class="card mt-3 border-0 shadow-sm">
+      <div class="card-body">
 
-      <div>
-        <!-- 🔹 Back Button -->
-        <a href="{% url 'browse_products_customer' %}" class="btn btn-secondary me-2">
-          ⬅ Back
-        </a>
+        <!-- Total -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0 text-muted">Total Amount</h5>
+          <h4 class="mb-0 text-success fw-bold">₹{{ total }}</h4>
+        </div>
 
-        <!-- 🔹 Clear Cart -->
-        <a href="{% url 'clear_cart' %}" class="btn btn-warning me-2">
-          🗑️ Clear Cart
-        </a>
+        <hr>
 
-        <!-- 🔹 Checkout -->
-        <a href="{% url 'checkout' %}" class="btn btn-primary">
-          ✅ Proceed to Checkout
-        </a>
+        <!-- Buttons — stacked on mobile, inline on desktop -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+
+          <!-- Back Button -->
+          <a href="{% url 'browse_products_customer' %}"
+             class="btn btn-secondary">
+            ⬅ Back
+          </a>
+
+          <div class="d-grid gap-2 d-md-flex">
+            <!-- Clear Cart -->
+            <a href="{% url 'clear_cart' %}"
+               class="btn btn-warning"
+               onclick="return confirm('Clear all items from cart?')">
+              🗑️ Clear Cart
+            </a>
+
+            <!-- Checkout -->
+            <a href="{% url 'checkout' %}"
+               class="btn btn-success fw-bold">
+              ✅ Proceed to Checkout
+            </a>
+          </div>
+
+        </div>
       </div>
     </div>
-  {% else %}
-    <p class="text-muted">Your cart is empty.</p>
 
-    <!-- 🔹 Back Button for Empty Cart -->
-    <a href="{% url 'browse_products_customer' %}" class="btn btn-secondary mt-3">
-      ⬅ Back to Products
-    </a>
+  {% else %}
+    <!-- Empty Cart -->
+    <div class="text-center py-5">
+      <div style="font-size: 4rem;">🛒</div>
+      <h4 class="text-muted mt-3">Your cart is empty</h4>
+      <p class="text-muted">Browse products and add items to your cart.</p>
+      <a href="{% url 'browse_products_customer' %}"
+         class="btn btn-success mt-2 px-4">
+        ⬅ Back to Products
+      </a>
+    </div>
   {% endif %}
+
 </div>
 {% endblock %}
