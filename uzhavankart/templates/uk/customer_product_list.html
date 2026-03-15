@@ -1,107 +1,185 @@
 {% extends "uk/customer_base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Available Products</h2>
+<div class="container mt-4 px-3 mb-5">
 
-    <div>
-      <!-- 🔹 Back Button -->
-      <a href="{% url 'customer_home' %}" class="btn btn-outline-dark me-2">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h2 class="mb-0">🌾 Available Products</h2>
+    <div class="d-flex gap-2">
+      <a href="{% url 'customer_home' %}" class="btn btn-outline-dark btn-sm">
         ⬅ Back
       </a>
-
-      <!-- 🔹 Common Cart Button -->
-      <a href="{% url 'view_cart' %}" class="btn btn-warning">
+      <a href="{% url 'view_cart' %}" class="btn btn-warning btn-sm fw-bold">
         🛒 Cart (<span id="cart-count">{{ cart_count }}</span>)
       </a>
     </div>
   </div>
 
-  <!-- 🔹 Filter Buttons -->
+  <!-- Filter Buttons (Horizontally Scrollable on Mobile) -->
   <div class="mb-4">
-    <a href="{% url 'browse_products_customer' %}" 
-       class="btn btn-secondary {% if not selected_stock_type %}active{% endif %}">
-       All
-    </a>
-    {% for key,label in stock_types %}
-      <a href="?stock_type={{ key }}" 
-         class="btn btn-outline-primary {% if selected_stock_type == key %}active{% endif %}">
-        {{ label }}
+    <div class="d-flex gap-2 overflow-auto pb-2 flex-nowrap" 
+         style="scrollbar-width:none; -ms-overflow-style:none;">
+      <a href="{% url 'browse_products_customer' %}"
+         class="btn btn-sm fw-semibold flex-shrink-0
+                {% if not selected_stock_type %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+        All
       </a>
+      {% for key, label in stock_types %}
+        <a href="?stock_type={{ key }}"
+           class="btn btn-sm fw-semibold flex-shrink-0
+                  {% if selected_stock_type == key %}btn-primary{% else %}btn-outline-primary{% endif %}">
+          {{ label }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Product Cards Grid -->
+  <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+    {% for product in products %}
+    <div class="col">
+      <div class="card h-100 shadow-sm border-0 text-center">
+
+        <!-- Product Image -->
+        <div class="pt-3 px-3">
+          <img src="{{ product.stock_image.url }}"
+               class="rounded-circle mx-auto d-block"
+               style="width:100px; height:100px; object-fit:cover;"
+               alt="{{ product.crop_name }}">
+        </div>
+
+        <div class="card-body p-2 d-flex flex-column">
+
+          <!-- Product Info -->
+          <h6 class="fw-bold mb-1 mt-1">{{ product.crop_name }}</h6>
+          <span class="badge bg-success mb-2" style="font-size:0.7rem;">
+            {{ product.get_stock_type_display }}
+          </span>
+
+          <div class="d-flex justify-content-between px-1 mb-1">
+            <small class="text-muted">Price</small>
+            <small class="fw-bold text-success">₹{{ product.price_per_kg }}/kg</small>
+          </div>
+          <div class="d-flex justify-content-between px-1 mb-2">
+            <small class="text-muted">Stock</small>
+            <small class="fw-semibold">{{ product.quantity_kg }} kg</small>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="input-group input-group-sm justify-content-center mb-2">
+            <button type="button"
+                    class="btn btn-outline-secondary decrement"
+                    style="width:32px;">−</button>
+            <input type="number"
+                   value="1" min="1"
+                   class="form-control text-center qty"
+                   style="max-width:50px; font-size:0.85rem;">
+            <button type="button"
+                    class="btn btn-outline-secondary increment"
+                    style="width:32px;">+</button>
+          </div>
+
+          <!-- Add to Cart Button -->
+          <button type="button"
+                  class="btn btn-success btn-sm w-100 mt-auto add-to-cart fw-semibold"
+                  data-url="{% url 'add_to_cart' product.crop_name %}">
+            🛒 Add to Cart
+          </button>
+
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <div style="font-size:3rem;">🌿</div>
+      <h5 class="text-muted mt-2">No products available</h5>
+      <p class="text-muted">Try selecting a different category.</p>
+    </div>
     {% endfor %}
   </div>
 
-  <!-- 🔹 Product Cards -->
-  <div class="row">
-    {% for product in products %}
-      <div class="col-md-3">
-        <div class="card shadow p-3 mb-3 text-center">
-          <img src="{{ product.stock_image.url }}" 
-               class="card-img-top mb-2 rounded-circle mx-auto d-block" 
-               style="width:150px; height:150px; object-fit:cover;" 
-               alt="{{ product.crop_name }}">
-          <h5>{{ product.crop_name }}</h5>
-          <p>Category: {{ product.get_stock_type_display }}</p>
-          <p>Price: ₹{{ product.price_per_kg }}/kg</p>
-          <p>Stock: {{ product.quantity_kg }} kg</p>
+</div>
 
-          <div class="d-flex justify-content-center align-items-center">
-            <button type="button" class="btn btn-outline-secondary btn-sm decrement">-</button>
-            <input type="number" value="1" min="1" class="form-control mx-2 qty" style="width:60px;">
-            <button type="button" class="btn btn-outline-secondary btn-sm increment">+</button>
-          </div>
-
-          <button type="button" 
-                  class="btn btn-success w-100 mt-2 add-to-cart" 
-                  data-url="{% url 'add_to_cart' product.crop_name %}">
-            Add to Cart
-          </button>
-        </div>
+<!-- Toast Notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+  <div id="cartToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body fw-semibold" id="toastMessage">
+        ✅ Added to cart!
       </div>
-    {% empty %}
-      <p class="text-muted">No products available in this category.</p>
-    {% endfor %}
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"></button>
+    </div>
   </div>
 </div>
 
-<!-- 🔹 jQuery for AJAX -->
+<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script>
-$(document).ready(function(){
+$(document).ready(function () {
 
   // Increment
-  $(".increment").click(function(){
+  $(".increment").click(function () {
     let qty = $(this).siblings(".qty");
     qty.val(parseInt(qty.val()) + 1);
   });
 
   // Decrement
-  $(".decrement").click(function(){
+  $(".decrement").click(function () {
     let qty = $(this).siblings(".qty");
     let val = parseInt(qty.val());
-    if(val > 1) qty.val(val - 1);
+    if (val > 1) qty.val(val - 1);
   });
 
-  $(".add-to-cart").click(function(){
-    let addUrl = $(this).data("url");   // ✅ fetch url from button
-    let quantity = $(this).closest(".card").find(".qty").val();
+  // Add to Cart (AJAX)
+  $(".add-to-cart").click(function () {
+    let btn = $(this);
+    let addUrl = btn.data("url");
+    let quantity = btn.closest(".card").find(".qty").val();
+
+    // Disable button while loading
+    btn.prop("disabled", true).text("Adding...");
 
     $.ajax({
-        url: addUrl,
-        method: "GET",
-        data: { qty: quantity },
-        success: function(response){
-            if(response.status === "success"){
-                $("#cart-count").text(response.cart_count);
-                alert(response.message);
-            } else {
-                alert("Something went wrong!");
-            }
-        },
-        error: function(xhr, status, error){
-            console.log("AJAX Error:", status, error, xhr.responseText);
-            alert("Error: Could not add to cart");
+      url: addUrl,
+      method: "GET",
+      data: { qty: quantity },
+      success: function (response) {
+        if (response.status === "success") {
+          $("#cart-count").text(response.cart_count);
+
+          // Show toast
+          $("#toastMessage").text("✅ " + response.message);
+          let toast = new bootstrap.Toast(
+            document.getElementById("cartToast"),
+            { delay: 2500 }
+          );
+          toast.show();
+
+        } else {
+          $("#toastMessage").text("⚠️ Something went wrong!");
+          $("#cartToast").removeClass("bg-success").addClass("bg-danger");
+          let toast = new bootstrap.Toast(
+            document.getElementById("cartToast"),
+            { delay: 2500 }
+          );
+          toast.show();
         }
+      },
+      error: function (xhr, status, error) {
+        console.log("AJAX Error:", status, error, xhr.responseText);
+        $("#toastMessage").text("❌ Could not add to cart");
+        $("#cartToast").removeClass("bg-success").addClass("bg-danger");
+        let toast = new bootstrap.Toast(
+          document.getElementById("cartToast"),
+          { delay: 2500 }
+        );
+        toast.show();
+      },
+      complete: function () {
+        // Re-enable button
+        btn.prop("disabled", false).html("🛒 Add to Cart");
+      }
     });
   });
 
