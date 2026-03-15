@@ -40,8 +40,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'vehicle_update' vehicle.vehicle_id %}" class="btn btn-sm btn-primary">Update</a>
-                        <a href="{% url 'vehicle_delete' vehicle.vehicle_id %}" class="btn btn-sm btn-danger">Delete</a>
+                        path('vehicles/update/<str:vehicle_id>/', views.vehicle_update, name='vehicle_update'),
+path('vehicles/delete/<str:vehicle_id>/', views.vehicle_delete, name='vehicle_delete'),
                     </td>
                 </tr>
                 {% empty %}
