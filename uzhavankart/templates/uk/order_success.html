@@ -1,32 +1,123 @@
 {% extends "uk/customer_base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <div class="alert alert-success">
-    🎉 Your order was placed successfully!
+<div class="container mt-4 px-3 mb-5">
+
+  <!-- Success Banner -->
+  <div class="card border-0 shadow-sm mb-4 bg-success text-white text-center py-4 px-3">
+    <div style="font-size:3.5rem;">🎉</div>
+    <h4 class="fw-bold mt-2 mb-1">Order Placed Successfully!</h4>
+    <p class="mb-0 opacity-75">Thank you for your purchase. Your order is being processed.</p>
   </div>
 
-  <h3>🧾 Recent Orders</h3>
-  <table class="table table-bordered text-center mt-3">
-    <thead>
-      <tr>
-        <th>Crop</th>
-        <th>Quantity</th>
-        <th>Total Price</th>
-        <th>Payment</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in orders %}
-      <tr>
-        <td>{{ order.crop_name }}</td>
-        <td>{{ order.quantity }}</td>
-        <td>₹ {{ order.total_price }}</td>
-        <td>{{ order.payment_method }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <!-- Header Row -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h5 class="mb-0 fw-bold">🧾 Recent Orders</h5>
+    <span class="badge bg-secondary">{{ orders|length }} item{{ orders|length|pluralize }}</span>
+  </div>
 
-  <a href="{% url 'browse_products_customer' %}" class="btn btn-primary mt-3">⬅️ Continue Shopping</a>
+  {% if orders %}
+
+    <!-- Desktop Table (hidden on mobile) -->
+    <div class="d-none d-md-block">
+      <table class="table table-bordered table-hover text-center align-middle">
+        <thead class="table-success">
+          <tr>
+            <th>Crop</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Payment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td class="fw-semibold">🌾 {{ order.crop_name }}</td>
+            <td>{{ order.quantity }} kg</td>
+            <td class="text-success fw-bold">₹{{ order.total_price }}</td>
+            <td>
+              {% if order.payment_method == "COD" %}
+                💵 Cash on Delivery
+              {% else %}
+                📲 Online Payment
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+        <!-- Desktop Total Row -->
+        <tfoot class="table-light">
+          <tr>
+            <td colspan="2" class="text-end fw-bold">Grand Total:</td>
+            <td class="text-success fw-bold">
+              ₹{% widthratio orders|length 1 0 %}
+              {{ orders|dictsumby:"total_price" }}
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+
+    <!-- Mobile Cards (hidden on desktop) -->
+    <div class="d-md-none">
+      {% for order in orders %}
+      <div class="card border-0 shadow-sm mb-3 border-start border-success border-3">
+        <div class="card-body p-3">
+
+          <!-- Crop Name -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">🌾 {{ order.crop_name }}</h6>
+            <span class="badge bg-success">Ordered</span>
+          </div>
+
+          <hr class="my-2">
+
+          <!-- Order Details -->
+          <div class="row text-center g-2">
+            <div class="col-4">
+              <small class="text-muted d-block">Quantity</small>
+              <span class="fw-semibold">{{ order.quantity }} kg</span>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block">Total</small>
+              <span class="fw-bold text-success">₹{{ order.total_price }}</span>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block">Payment</small>
+              <span class="fw-semibold" style="font-size:0.8rem;">
+                {% if order.payment_method == "COD" %}
+                  💵 COD
+                {% else %}
+                  📲 Online
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div class="text-center py-4">
+      <p class="text-muted">No recent orders found.</p>
+    </div>
+  {% endif %}
+
+  <!-- Action Buttons -->
+  <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+    <a href="{% url 'browse_products_customer' %}"
+       class="btn btn-success fw-semibold px-4">
+      🛒 Continue Shopping
+    </a>
+    <a href="{% url 'cancel_order' %}"
+       class="btn btn-outline-danger fw-semibold px-4">
+      ❌ Manage Orders
+    </a>
+  </div>
+
 </div>
 {% endblock %}

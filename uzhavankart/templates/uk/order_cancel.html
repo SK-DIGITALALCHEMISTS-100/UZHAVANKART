@@ -1,53 +1,146 @@
 {% extends "uk/customer_base.html" %}
 {% block content %}
-<div class="container mt-4">
-  <h3>❌ Cancel Your Orders</h3>
+<div class="container mt-4 px-3 mb-5">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <h3 class="mb-0">❌ Cancel Your Orders</h3>
+    <a href="{% url 'browse_products_customer' %}" class="btn btn-outline-primary btn-sm">
+      ⬅️ Continue Shopping
+    </a>
+  </div>
 
   {% if orders %}
-    <table class="table table-bordered text-center mt-3">
-      <thead class="table-danger">
-        <tr>
-          <th>Crop</th>
-          <th>Quantity</th>
-          <th>Total Price</th>
-          <th>Payment</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in orders %}
-        <tr>
-          <td>{{ order.crop_name }}</td>
-          <td>{{ order.quantity }}</td>
-          <td>₹ {{ order.total_price }}</td>
-          <td>{{ order.payment_method }}</td>
-          <td>
+
+    <!-- ✅ Desktop Table (hidden on mobile) -->
+    <div class="d-none d-md-block">
+      <table class="table table-bordered table-hover text-center align-middle">
+        <thead class="table-danger">
+          <tr>
+            <th>Crop</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td class="fw-semibold">🌾 {{ order.crop_name }}</td>
+            <td>{{ order.quantity }} kg</td>
+            <td class="text-success fw-bold">₹{{ order.total_price }}</td>
+            <td>
+              {% if order.payment_method == "COD" %}
+                💵 COD
+              {% else %}
+                📲 Online
+              {% endif %}
+            </td>
+            <td>
+              {% if order.status == "Cancelled" %}
+                <span class="badge bg-danger px-3 py-2">Cancelled</span>
+              {% else %}
+                <span class="badge bg-success px-3 py-2">Active</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if order.status != "Cancelled" %}
+                <a href="{% url 'cancel_order' order.id %}"
+                   class="btn btn-sm btn-danger fw-semibold"
+                   onclick="return confirm('Are you sure you want to cancel this order?');">
+                  ❌ Cancel
+                </a>
+              {% else %}
+                <span class="text-muted fst-italic">Already Cancelled</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ✅ Mobile Cards (hidden on desktop) -->
+    <div class="d-md-none">
+      {% for order in orders %}
+      <div class="card mb-3 border-0 shadow-sm
+                  {% if order.status == 'Cancelled' %}border-start border-danger border-3{% else %}border-start border-success border-3{% endif %}">
+        <div class="card-body p-3">
+
+          <!-- Top Row: Crop Name + Status Badge -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">🌾 {{ order.crop_name }}</h6>
             {% if order.status == "Cancelled" %}
               <span class="badge bg-danger">Cancelled</span>
             {% else %}
               <span class="badge bg-success">Active</span>
             {% endif %}
-          </td>
-          <td>
-            {% if order.status != "Cancelled" %}
-              <a href="{% url 'cancel_order' order.id %}" 
-                 class="btn btn-sm btn-danger"
+          </div>
+
+          <hr class="my-2">
+
+          <!-- Order Details Grid -->
+          <div class="row text-center g-2 mb-3">
+            <div class="col-4">
+              <small class="text-muted d-block">Quantity</small>
+              <span class="fw-semibold">{{ order.quantity }} kg</span>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block">Total</small>
+              <span class="fw-bold text-success">₹{{ order.total_price }}</span>
+            </div>
+            <div class="col-4">
+              <small class="text-muted d-block">Payment</small>
+              <span class="fw-semibold">
+                {% if order.payment_method == "COD" %}
+                  💵 COD
+                {% else %}
+                  📲 Online
+                {% endif %}
+              </span>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          {% if order.status != "Cancelled" %}
+            <div class="d-grid">
+              <a href="{% url 'cancel_order' order.id %}"
+                 class="btn btn-danger btn-sm fw-semibold"
                  onclick="return confirm('Are you sure you want to cancel this order?');">
-                 ❌ Cancel
+                ❌ Cancel This Order
               </a>
-            {% else %}
-              <span class="text-muted">Already Cancelled</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+            </div>
+          {% else %}
+            <div class="text-center">
+              <small class="text-muted fst-italic">⚠️ This order has already been cancelled</small>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Order Count Summary -->
+    <div class="text-muted mt-2 mb-3" style="font-size:0.85rem;">
+      Showing {{ orders|length }} order{{ orders|length|pluralize }}
+    </div>
+
   {% else %}
-    <p class="alert alert-warning mt-3">⚠️ You don’t have any orders yet.</p>
+
+    <!-- Empty State -->
+    <div class="text-center py-5">
+      <div style="font-size:4rem;">📦</div>
+      <h5 class="text-muted mt-3">No Orders Found</h5>
+      <p class="text-muted">You haven't placed any orders yet.</p>
+      <a href="{% url 'browse_products_customer' %}" class="btn btn-success px-4 mt-2">
+        🛒 Start Shopping
+      </a>
+    </div>
+
   {% endif %}
 
-  <a href="{% url 'browse_products_customer' %}" class="btn btn-primary mt-3">⬅️ Continue Shopping</a>
 </div>
 {% endblock %}
