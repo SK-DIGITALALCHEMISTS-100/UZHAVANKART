@@ -14,21 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
-from django.http import HttpResponse
-from uzhavankart import views as uzhava_views
-
-def health_check(request):
-    print("HEALTH CHECK PING RECEIVED!")
-    return HttpResponse("OK")
+def home(request):
+    return HttpResponse("UzhavanKart is Live 🚀")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('uzhavankart/', include('uzhavankart.urls')),
     path('health/', health_check),
-    path('', uzhava_views.home, name='root_home'),
+    path('', home, name='home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
