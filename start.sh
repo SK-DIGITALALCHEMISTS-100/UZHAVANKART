@@ -6,6 +6,9 @@ python manage.py collectstatic --noinput
 echo "Starting migrations..."
 python manage.py migrate
 
+echo "Seeding initial employee data..."
+python manage.py seed_employee
+
 echo "Starting Gunicorn..."
 exec gunicorn uk.wsgi:application \
     --bind 0.0.0.0:${PORT:-8080} \
