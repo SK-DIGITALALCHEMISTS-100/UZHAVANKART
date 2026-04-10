@@ -7,6 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8080
 
 CMD ["sh", "-c", "python manage.py migrate && gunicorn uk.wsgi --bind 0.0.0.0:$PORT"]
