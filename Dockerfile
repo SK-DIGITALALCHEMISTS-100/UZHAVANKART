@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 
-CMD ["sh", "-c", "python manage.py migrate && gunicorn uk.wsgi --bind 0.0.0.0:$PORT"]
+CMD python manage.py migrate && gunicorn uk.wsgi --bind 0.0.0.0:${PORT:-8080}
