@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD python manage.py migrate && gunicorn uk.wsgi --bind 0.0.0.0:${PORT:-8080}
+CMD ["sh", "-c", "python manage.py migrate && gunicorn uk.wsgi --bind 0.0.0.0:$PORT"]
