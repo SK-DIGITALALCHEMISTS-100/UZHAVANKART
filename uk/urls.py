@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 def home(request):
     return HttpResponse("UzhavanKart is Live 🚀")
 
@@ -28,5 +31,8 @@ urlpatterns = [
     path('', home),
     path('health/', health_check),
     path('admin/', admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# 👇 THIS LINE NOW WORKS
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
