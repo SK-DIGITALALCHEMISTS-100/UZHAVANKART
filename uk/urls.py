@@ -22,6 +22,7 @@ from django.http import HttpResponse
 from uzhavankart import views as uzhava_views
 
 def health_check(request):
+    print("HEALTH CHECK PING RECEIVED!")
     return HttpResponse("OK")
 
 urlpatterns = [
