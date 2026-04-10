@@ -7,8 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+COPY start.sh .
+RUN chmod +x start.sh
 
-CMD python manage.py collectstatic --noinput && \
-    python manage.py migrate && \
-    exec gunicorn uk.wsgi:application --bind 0.0.0.0:${PORT:-8080} --access-logfile - --error-logfile - --log-level debug --timeout 120
+CMD ["./start.sh"]
 
