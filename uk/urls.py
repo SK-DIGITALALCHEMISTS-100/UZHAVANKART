@@ -18,11 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import RedirectView
+from django.http import HttpResponse
+from uzhavankart import views as uzhava_views
+
+def health_check(request):
+    return HttpResponse("OK")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('uzhavankart/', include('uzhavankart.urls')),
-    path('', RedirectView.as_view(url='/uzhavankart/company/', permanent=True)),
+    path('health/', health_check),
+    path('', uzhava_views.home, name='root_home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
