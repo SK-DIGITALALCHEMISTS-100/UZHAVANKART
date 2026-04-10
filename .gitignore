@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+static/static/
+
+# Vercel
+.vercel/
+
+# Environment variables
+.env
+.venv/
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# OS-specific
+.DS_Store
+Thumbs.db
