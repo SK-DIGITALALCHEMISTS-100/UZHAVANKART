@@ -1,14 +1,13 @@
 """
 Main URL Configuration for UZHAVANKART Project
 """
-from django.contrib import admin
+
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # Admin panel
-    path('admin/', admin.site.urls),
+   
     
     # Health check for deployment
     path('health/', lambda request: __import__('django.http', fromlist=['HttpResponse']).HttpResponse('OK')),
